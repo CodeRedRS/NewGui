@@ -1,0 +1,164 @@
+import javax.swing.*;
+import javax.swing.border.TitledBorder;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+/**
+ * Created by dadler on 3/30/2016.
+ */
+public class Gui3 extends JFrame {
+    private static final String difficulty[] = {"Automatic", "Novice", "Intermediate", "Veteran"};
+    private static final String allRewards[] = {"Void Knight Mace"}; // Create Enum
+    private void addComponentsToPane(final Container pane) {
+        pane.setLayout(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        GridBagConstraints innerCon = new GridBagConstraints();
+        c.fill = GridBagConstraints.BOTH;
+        innerCon.fill = GridBagConstraints.HORIZONTAL;
+        c.weightx = 0.5;
+        innerCon.weightx = 0.5;
+        innerCon.gridx = 0;
+
+        /**
+         * DIFFICULTY CONTROLS
+         */
+        JPanel DifficultyControls = new JPanel(new GridBagLayout());
+        DifficultyControls.setBorder(new TitledBorder("Difficulty Settings"));
+
+        JComboBox difficultySelector = new JComboBox(difficulty);
+        JLabel difficultyLabel = new JLabel("What boat do you want to use:");
+
+        innerCon.gridy = 0;
+        DifficultyControls.add(difficultyLabel, innerCon);
+
+        innerCon.gridy = 1;
+        DifficultyControls.add(difficultySelector, innerCon);
+
+        /**
+         * REWARD CONTROLS
+         */
+        JPanel RewardControls = new JPanel(new GridBagLayout());
+        RewardControls.setBorder(new TitledBorder("Reward Settings"));
+
+        // Selected Rewards
+        JList selectedRewards = new JList();
+        selectedRewards.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        selectedRewards.setVisibleRowCount(5);
+        JScrollPane scrollPane = new JScrollPane(selectedRewards);
+        // All Rewards
+        JComboBox allRewardsList = new JComboBox(allRewards);
+        // Add Reward
+        JButton addRewardBtn = new JButton("Add Reward Item");
+        // Remove Reward
+        JButton removeRewardBtn = new JButton("Remove Reward Item");
+
+        innerCon.gridy = 0;
+        RewardControls.add(new JLabel("Spend your reward points on:"), innerCon);
+
+        innerCon.gridy = 1;
+        RewardControls.add(scrollPane, innerCon);
+
+        innerCon.gridy = 2;
+        RewardControls.add(new JLabel("Add a reward item:"), innerCon);
+
+        innerCon.gridy = 3;
+        RewardControls.add(allRewardsList, innerCon);
+
+        innerCon.gridy = 4;
+        RewardControls.add(addRewardBtn, innerCon);
+
+        innerCon.gridy = 5;
+        RewardControls.add(removeRewardBtn, innerCon);
+
+        /**
+         * PRAYER CONTROLS
+         */
+        JPanel PrayerControls = new JPanel(new GridBagLayout());
+        PrayerControls.setBorder(new TitledBorder("Prayer Settings"));
+
+        JCheckBox usePrayer = new JCheckBox("Use quick prayers");
+
+        innerCon.gridy = 0;
+        PrayerControls.add(usePrayer, innerCon);
+
+        /**
+         * GAMEPLAY CONTROLS
+         */
+        JPanel GameplayControls = new JPanel(new GridBagLayout());
+        GameplayControls.setBorder(new TitledBorder("Gameplay Settings"));
+
+        final JComboBox gameplayStyles = new JComboBox(new String[] {"Choose One", "Defend Knight", "Attack Random", "Attack Portals"});
+        final JPanel gameplayStylePanel= new JPanel();
+
+        // Gameplay Controller Logic
+        gameplayStyles.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                gameplayStylePanel.removeAll();
+                gameplayStylePanel.setBorder(new TitledBorder(gameplayStyles.getSelectedItem() + " Settings"));
+
+                switch (gameplayStyles.getSelectedIndex()) {
+                    case 1:
+                    default:
+                        gameplayStylePanel.setLayout(new GridLayout(2, 1));
+                        gameplayStylePanel.add(new JLabel("Defence Radius:"));
+                        gameplayStylePanel.add(new JSlider(5, 15, 5));
+                        break;
+                    case 2:
+                        gameplayStylePanel.setLayout(new GridLayout(2, 1));
+                        gameplayStylePanel.add(new JLabel("What Pest to Attack:"));
+                        gameplayStylePanel.add(new JList(new String[]{"Brawler", "Spinner", "Etc..."}));
+                        break;
+                    case 3:
+                        gameplayStylePanel.setLayout(new GridLayout(1, 1));
+                        gameplayStylePanel.add(new Checkbox("Attack Spinners"));
+                        break;
+                }
+            }
+        });
+
+        innerCon.gridy = 0;
+        GameplayControls.add(new JLabel("Which playing style do you want to use?"), innerCon);
+
+        innerCon.gridy = 1;
+        GameplayControls.add(gameplayStyles, innerCon);
+
+        innerCon.gridy = 2;
+        GameplayControls.add(gameplayStylePanel, innerCon);
+
+
+        // Add to Main Pane LEFT
+        c.gridx = 0;
+        c.gridy = 0;
+        pane.add(DifficultyControls, c);
+
+        c.gridy = 1;
+        pane.add(RewardControls, c);
+
+        c.gridy = 2;
+        pane.add(PrayerControls, c);
+
+        c.gridy = 3;
+        pane.add(new JButton("Start playing Pest Control!"), c);
+
+        // Add to Main Pane RIGHT
+        c.gridx = 1;
+        c.gridy = 1;
+        pane.add(GameplayControls, c);
+
+
+    }
+
+
+    public static void createAndShowGUI() {
+        //Create and set up the window.
+        Gui3 frame = new Gui3();
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        //Set up the content pane.
+        frame.addComponentsToPane(frame.getContentPane());
+        //Display the window.
+        frame.pack();
+        frame.setVisible(true);
+    }
+}
